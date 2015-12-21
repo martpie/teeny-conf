@@ -1,5 +1,5 @@
 {
-  "name": "tinyconf",
+  "name": "teenyconf",
   "version": "0.1.0",
   "description": "A small npm package to handle one or multiple config files in Node apps. Works fine with Electron and NW.js",
   "main": "src/main.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KeitIG/tiny-conf.git"
+    "url": "git+https://github.com/KeitIG/teenyconf.git"
   },
   "keywords": [
     "conf",
@@ -20,7 +20,7 @@
   "author": "Pierre de la Martinière",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/KeitIG/tiny-conf/issues"
+    "url": "https://github.com/KeitIG/teenyconf/issues"
   },
-  "homepage": "https://github.com/KeitIG/tiny-conf#readme"
+  "homepage": "https://github.com/KeitIG/teenyconf#readme"
 }
