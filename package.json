@@ -1,14 +1,14 @@
 {
-  "name": "teenyconf",
+  "name": "teeny-conf",
   "version": "0.1.0",
-  "description": "A small npm package to handle one or multiple config files in Node apps. Works fine with Electron and NW.js",
+  "description": "A small npm package to handle config files in Node apps. Works fine with Electron and NW.js",
   "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KeitIG/teenyconf.git"
+    "url": "git+https://github.com/KeitIG/teeny-conf.git"
   },
   "keywords": [
     "conf",
@@ -20,7 +20,7 @@
   "author": "Pierre de la Martinière",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/KeitIG/teenyconf/issues"
+    "url": "https://github.com/KeitIG/teeny-conf/issues"
   },
-  "homepage": "https://github.com/KeitIG/teenyconf#readme"
+  "homepage": "https://github.com/KeitIG/teeny-conf#readme"
 }
