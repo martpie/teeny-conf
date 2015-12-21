@@ -3,11 +3,11 @@ A small npm package to handle one or multiple config files in Node apps. Works f
 
 API asynchronous or synchronous, depending of your needs.
 
-### Why another ?
+## Why another ?
 
 I didn't find what I wanted on npm, I was needing a conf I could put in a variable, so I could export it without any problem to another scope.
 
-### Example
+## Example
 
 config.js:
 ``` javascript
@@ -24,34 +24,34 @@ var config = require('./config.js');
 // now you can use config.set(), config.get(), etc...
 ```
 
-### API
+## API
 
 All operations are synchronous to avoid multiple successive save conflicts. An async mode may come in the future if people ask for it.
 
-#### tinyconf.loadOrCreate(pathToFile, defaultConfig, callback)
+### tinyconf.loadOrCreate(pathToFile, defaultConfig, callback)
 
 load a config file or create it if it does not exist. If `pathToFile` does not exist, a file will be created with the wanted name, and `defaultConfig` in.
 
-#### tinyconf.loadOrCreateSync(pathToFile, defaultConfig)
+### tinyconf.loadOrCreateSync(pathToFile, defaultConfig)
 
 synchronous `loadOrCreate`.
 
-#### tinyconf.getAll()
+### tinyconf.getAll()
 
 get the whole conf
 
-#### tinyconf.get(key)
+### tinyconf.get(key)
 
 get `key`
 
-#### tinyconf.set(key, value)
+### tinyconf.set(key, value)
 
 set `key` to `value`
 
-#### tinyconf.save(callback)
+### tinyconf.save(callback)
 
 save config file
 
-#### tinyconf.saveSync()
+### tinyconf.saveSync()
 
 save config file synchronously
