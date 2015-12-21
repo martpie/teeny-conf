@@ -1,5 +1,5 @@
 {
-  "name": "tiny-conf",
+  "name": "tinyconf",
   "version": "0.1.0",
   "description": "A small npm package to handle one or multiple config files in Node apps. Works fine with Electron and NW.js",
   "main": "src/main.js",
