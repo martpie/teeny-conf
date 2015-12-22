@@ -46,7 +46,7 @@ var tinyconf = {
         }
     },
 
-    loadOrCreateSync(pathToFile, defaultConfig) {
+    loadOrCreateSync: function(pathToFile, defaultConfig) {
 
         var self = this;
 
