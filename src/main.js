@@ -95,14 +95,16 @@ var tinyconf = {
         this.conf[key] = value;
     },
 
-    save: function(callback) {
+    save: function(minify, callback) {
 
+        minify = minify || false;
         var self = this;
+        var output = minify ? JSON.stringify(self.conf) : JSON.stringify(self.conf, null, ' ');
 
         try {
-            fs.writeFile(self.metas.path, JSON.stringify(self.conf), function(err) {
+            fs.writeFile(self.metas.path, output, function(err) {
                 if(err) throw err;
-                callback();
+                else callback();
             });
         }
         catch(err) {
@@ -110,12 +112,15 @@ var tinyconf = {
         }
     },
 
-    saveSync: function() {
+    saveSync: function(minify) {
+
+        minify = minify || false;
         var self = this;
+        var output = minify ? JSON.stringify(self.conf) : JSON.stringify(self.conf, null, ' ');
+        console.log(minify ? 'true' : 'false');
 
         try {
-
-            fs.writeFileSync(self.metas.path, JSON.stringify(self.conf));
+            fs.writeFileSync(self.metas.path, output);
         }
         catch(err) {
             console.error(err);

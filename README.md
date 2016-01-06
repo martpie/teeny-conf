@@ -48,10 +48,10 @@ get `key`
 
 set `key` to `value`
 
-### teenyconf.save(callback)
+### teenyconf.save(minify, callback)
 
-save config file
+save config file with `callback`. `minify` is optional and let you minify the json output.
 
-### teenyconf.saveSync()
+### teenyconf.saveSync(minify)
 
-save config file synchronously
+save config file synchronously. `minify` is optional and let you minify the json output.
