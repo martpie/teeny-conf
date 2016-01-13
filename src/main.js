@@ -117,7 +117,6 @@ var tinyconf = {
         minify = minify || false;
         var self = this;
         var output = minify ? JSON.stringify(self.conf) : JSON.stringify(self.conf, null, ' ');
-        console.log(minify ? 'true' : 'false');
 
         try {
             fs.writeFileSync(self.metas.path, output);
