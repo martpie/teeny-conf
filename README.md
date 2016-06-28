@@ -9,11 +9,24 @@ I didn't find what I wanted on npm, I was needing a conf I could put in a variab
 
 ## Example
 
+### Basic
+
 config.js:
 ``` javascript
-var teenyconf = require('teeny-conf');
+var teeny = require('teeny-conf');
 
-var config = teenyconf.loadOrCreate('config.json', {});
+var config = new teeny('config.json'));
+config.loadOrCreateSync();
+```
+
+### with a module.exports
+
+config.js:
+``` javascript
+var teeny = require('teeny-conf');
+
+var config = new teeny('config.json'));
+config.loadOrCreateSync();
 
 module.exports = config;
 ```
@@ -28,11 +41,15 @@ var config = require('./config.js');
 
 All operations are synchronous to avoid multiple successive save conflicts. An async mode may come in the future if people ask for it.
 
-### teenyconf.loadOrCreate(pathToFile, defaultConfig, callback)
+### Constructor
 
-load a config file or create it if it does not exist. If `pathToFile` does not exist, a file will be created with the wanted name, and `defaultConfig` in.
+`new teeny(configPath)`, `configPath` being the filename where you want your config.
 
-### teenyconf.loadOrCreateSync(pathToFile, defaultConfig)
+### teenyconf.loadOrCreate(defaultConfig, callback)
+
+load a config file or create it if it does not exist. If `pathToFile` does not exist, a file will be created with the wanted name, and `defaultConfig` in. If `defaultConfig` is not defined, this will be an empty object.
+
+### teenyconf.loadOrCreateSync(defaultConfig)
 
 synchronous `loadOrCreate`.
 
