@@ -1,44 +1,40 @@
 var fs = require('fs');
 
-var tinyconf = {
+var teenyconf = function(configPath) {
 
-    metas: {
-        path: 'config.json'
-    },
+    var _metas = {
+        configPath: configPath || 'config.json'
+    };
 
-    conf: {},
+    var _conf = {};
 
-    loadOrCreate: function(pathToFile, defaultConfig, callback) {
+    this.loadOrCreate = function(defaultConfig, callback) {
 
         var self = this;
+        defaultConfig = defaultConfig || {};
 
         try {
-            if(!fs.existsSync(pathToFile)) {
+            if(!fs.existsSync(_metas.configPath)) {
                 // Load the file
-                self.metas.path = 'pathToFile';
-                self.conf = defaultConfig;
+                _conf = defaultConfig;
                 self.saveSync();
                 callback();
-                return self;
 
             } else {
 
-                fs.readFile(pathToFile, function(err, data) {
+                fs.readFile(_metas.configPath, function(err, data) {
+
                     if(err) throw err;
 
                     // Check if json is valid
                     try {
-                        JSON.parse(data);
+                        _conf = JSON.parse(data);
+                        callback();
                     }
                     catch(err) {
-                        throw 'Error parsing JSON: ' + err;
+                        throw 'Error reading ' + _metas.configPath + ': ' + err;
                     }
-
-                    self.metas.path = pathToFile;
-                    self.conf = JSON.parse(data);
-                    callback();
-                    return self;
-                })
+                });
             }
         }
         catch(err) {
@@ -46,33 +42,28 @@ var tinyconf = {
         }
     },
 
-    loadOrCreateSync: function(pathToFile, defaultConfig) {
+    this.loadOrCreateSync = function(defaultConfig) {
 
         var self = this;
+        defaultConfig = defaultConfig || {};
 
         try {
-            if(!fs.existsSync(pathToFile)) {
+            if(!fs.existsSync(_metas.configPath)) {
                 // Load the file
-                self.metas.path = pathToFile;
-                self.conf = defaultConfig;
+                _conf = defaultConfig;
                 self.saveSync();
-                return self;
 
             } else {
 
-                var data = fs.readFileSync(pathToFile);
+                var data = fs.readFileSync(_metas.configPath);
 
                 // Check if json is valid
                 try {
-                    JSON.parse(data);
+                    _conf = JSON.parse(data);
                 }
                 catch(err) {
-                    throw 'Error parsing JSON: ' + err;
+                    throw 'Error reading ' + _metas.configPath + ': ' + err;
                 }
-
-                self.metas.path = pathToFile;
-                self.conf = JSON.parse(data);
-                return self;
             }
         }
         catch(err) {
@@ -80,29 +71,29 @@ var tinyconf = {
         }
     },
 
-    get: function(key) {
+    this.get = function(key) {
 
-        return this.conf[key];
+        return _conf[key];
     },
 
-    getAll: function() {
+    this.getAll = function() {
 
-        return this.conf;
+        return _conf;
     },
 
-    set: function(key, value) {
+    this.set = function(key, value) {
 
-        this.conf[key] = value;
+        _conf[key] = value;
     },
 
-    save: function(minify, callback) {
+    this.save = function(minify, callback) {
 
         minify = minify || false;
         var self = this;
-        var output = minify ? JSON.stringify(self.conf) : JSON.stringify(self.conf, null, ' ');
+        var output = minify ? JSON.stringify(_conf) : JSON.stringify(_conf, null, ' ');
 
         try {
-            fs.writeFile(self.metas.path, output, function(err) {
+            fs.writeFile(_metas.configPath, output, function(err) {
                 if(err) throw err;
                 else callback();
             });
@@ -112,14 +103,14 @@ var tinyconf = {
         }
     },
 
-    saveSync: function(minify) {
+    this.saveSync = function(minify) {
 
         minify = minify || false;
         var self = this;
-        var output = minify ? JSON.stringify(self.conf) : JSON.stringify(self.conf, null, ' ');
+        var output = minify ? JSON.stringify(_conf) : JSON.stringify(_conf, null, ' ');
 
         try {
-            fs.writeFileSync(self.metas.path, output);
+            fs.writeFileSync(_metas.configPath, output);
         }
         catch(err) {
             console.error(err);
@@ -127,4 +118,4 @@ var tinyconf = {
     }
 }
 
-module.exports = tinyconf;
+module.exports = teenyconf;
