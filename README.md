@@ -39,15 +39,19 @@ var config = require('./config.js');
 
 ## API
 
-All operations are synchronous to avoid multiple successive save conflicts. An async mode may come in the future if people ask for it.
+Most of the operations have two versions: a synchronous and an asynchronous one, depending of your needs.
 
 ### Constructor
 
-`new teeny(configPath)`, `configPath` being the filename where you want your config.
+`new teeny(configPath)`
+
+#### Params
+
+`configPath`: the filename where you want your config / your config already is.
 
 ### teenyconf.loadOrCreate(defaultConfig, callback)
 
-load a config file or create it if it does not exist. If `pathToFile` does not exist, a file will be created with the wanted name, and `defaultConfig` in. If `defaultConfig` is not defined, this will be an empty object.
+load a config file or create it if it does not exist. If `pathToFile` does not exist, a file will be created with the wanted name passed in the constructor, and `defaultConfig` in. If `defaultConfig` is not defined, this will be an empty object.
 
 ### teenyconf.loadOrCreateSync(defaultConfig)
 
@@ -59,7 +63,7 @@ get the whole conf
 
 ### teenyconf.get(key)
 
-get `key`
+get `key` in your config. Please note this does not support sublevel-keys yet.
 
 ### teenyconf.set(key, value)
 
