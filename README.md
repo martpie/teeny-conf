@@ -69,6 +69,10 @@ get `key` in your config. Please note this does not support sublevel-keys yet.
 
 set `key` to `value`
 
+### teenyconf.delete(key)
+
+delete `key`
+
 ### teenyconf.save(minify, callback)
 
 save config file with `callback`. `minify` is optional and let you minify the json output.

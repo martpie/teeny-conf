@@ -86,6 +86,11 @@ var teenyconf = function(configPath) {
         _conf[key] = value;
     },
 
+    this.delete = function(key) {
+
+        delete _conf[key];
+    },
+
     this.save = function(minify, callback) {
 
         minify = minify || false;
