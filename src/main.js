@@ -100,7 +100,7 @@ var teenyconf = function(configPath) {
         try {
             fs.writeFile(_metas.configPath, output, function(err) {
                 if(err) throw err;
-                else callback();
+                if (callback) callback();
             });
         }
         catch(err) {
