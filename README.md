@@ -9,11 +9,17 @@ I didn't find what I wanted on npm, I was needing a conf I could put in a variab
 
 ## Example
 
+### Installation
+
+``` bash
+npm install teeny-conf
+```
+
 ### Basic
 
 config.js:
 ``` javascript
-import teeny = from 'teeny-conf';
+import teeny from 'teeny-conf';
 
 const config = new teeny('config.json'));
 config.loadOrCreateSync();
@@ -23,9 +29,9 @@ config.loadOrCreateSync();
 
 config.js:
 ``` javascript
-const teeny = require('teeny-conf');
+import teeny from 'teeny-conf';
 
-const  config = new teeny('config.json'));
+const config = new teeny('config.json'));
 config.loadOrCreateSync();
 
 export default config;
