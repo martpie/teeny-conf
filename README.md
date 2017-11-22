@@ -13,27 +13,27 @@ I didn't find what I wanted on npm, I was needing a conf I could put in a variab
 
 config.js:
 ``` javascript
-var teeny = require('teeny-conf');
+import teeny = from 'teeny-conf';
 
-var config = new teeny('config.json'));
+const config = new teeny('config.json'));
 config.loadOrCreateSync();
 ```
 
-### with a module.exports
+### with an export
 
 config.js:
 ``` javascript
-var teeny = require('teeny-conf');
+const teeny = require('teeny-conf');
 
-var config = new teeny('config.json'));
+const  config = new teeny('config.json'));
 config.loadOrCreateSync();
 
-module.exports = config;
+export default config;
 ```
 
 main.js
 ``` javascript
-var config = require('./config.js');
+import config from './config.js';
 // now you can use config.set(), config.get(), etc...
 ```
 
