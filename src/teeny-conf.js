@@ -53,11 +53,7 @@ const teenyconf = function(configPath, defaultConfig = {}) {
    * @return {Promise}
    */
   this.reload = async () => {
-    try {
-      _conf = JSON.parse(await readFile(_configPath));
-    } catch(err) {
-      throw(err);
-    }
+    _conf = JSON.parse(await readFile(_configPath));
   };
 
   /**
@@ -73,10 +69,14 @@ const teenyconf = function(configPath, defaultConfig = {}) {
   /**
    * Get a key from conf
    * @param  {String} key
+   * @param  {String} def default value to return if there is no key
    * @return {[}
    */
-  this.get = (key) => {
-    if (key) return _conf[key];
+  this.get = (key, def) => {
+    if (key) {
+      if (_conf.hasOwnProperty(key)) return _conf[key];
+      return def;
+    }
 
     // Else return everything
     return _conf;

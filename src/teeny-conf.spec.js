@@ -85,7 +85,8 @@ test('conf.get should return the whole conf by default', async () => {
   expect(conf.get()).toEqual({ fr: 'bonjour', en: 'hello' });
 });
 
-test('conf.get should return the a specific key if specified', async () => {
+
+test('conf.get should return the specific key if specified', async () => {
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour', number: 42 });
@@ -95,6 +96,16 @@ test('conf.get should return the a specific key if specified', async () => {
   expect(conf.get('fr')).toBe('bonjour');
   expect(conf.get('number')).toBe(42);
   expect(conf.get('something')).toBe(undefined);
+});
+
+
+test('conf.get should return the default value if the key does not exist', async () => {
+  const configPath = generateDirectory();
+
+  const conf = new teenyconf(configPath, {});
+  await conf.load();
+
+  expect(conf.get('fr', 'bonjour')).toBe('bonjour');
 });
 
 
@@ -138,6 +149,22 @@ test('conf.save should correctly save file on disk', async () => {
   // Check on disk
   const json = JSON.parse(await readFile(configPath));
   expect(json).toEqual({ fr: 'bonjour', de: 'guten Tag' });
+});
+
+test('conf.save minify option should be respected', async () => {
+  const configPath = generateDirectory();
+
+  const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
+  await conf.load();
+
+  conf.set('de', 'guten Tag');
+  conf.delete('en');
+
+  await conf.save(true);
+
+  // Check on disk
+  const file = await readFile(configPath, 'utf8');
+  expect(file).toBe('{"fr":"bonjour","de":"guten Tag"}');
 });
 
 
