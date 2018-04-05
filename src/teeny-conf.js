@@ -101,10 +101,17 @@ const teenyconf = function(configPath, defaultConfig = {}) {
 
   /**
    * Delete a key from the configuration
-   * @param  {String} key key to be deleted
    */
   this.clear = () => {
     _conf = {};
+  };
+
+  /**
+   * Check if a key exists
+   * @param  {String} key
+   */
+  this.has = (key) => {
+    return _conf.hasOwnProperty(key);
   };
 };
 

@@ -158,3 +158,28 @@ test('conf.reload should work correctly', async () => {
 
   expect(conf2.get()).toEqual({ fr: 'bonjour', de: 'guten Tag' });
 });
+
+
+test('conf.clear should work correctly', async () => {
+  const configPath = generateDirectory();
+
+  const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
+  await conf.load();
+
+  conf.clear();
+
+  // Check on disk
+  expect(conf.get()).toEqual({});
+});
+
+
+test('conf.has should work correctly', async () => {
+  const configPath = generateDirectory();
+
+  const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
+  await conf.load();
+
+  // Check on disk
+  expect(conf.has('fr')).toBe(true);
+  expect(conf.has('de')).toBe(false);
+});
