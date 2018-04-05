@@ -76,7 +76,7 @@ Load the existing config file into teeny if it exists. This is a mandatory step 
 `Promise`
 
 
-### teenyconf.get([key])
+### `teenyconf.get([key])`
 
 Get the `key` value in your config. If no `key` is specified, returns the whole conf.<br />
 Please note `set` does not support sub-keys yet.
@@ -91,7 +91,7 @@ name of the key
 `any`
 
 
-### teenyconf.set(key, value)
+### `teenyconf.set(key, value)`
 
 Set `key` to `value`.
 
@@ -104,7 +104,7 @@ name of the key
 the new value for this key
 
 
-### teenyconf.has(key)
+### `teenyconf.has(key)`
 
 Check if a key exists in the conf.
 
@@ -118,7 +118,7 @@ name of the key
 `Boolean`
 
 
-### teenyconf.delete(key)
+### `teenyconf.delete(key)`
 
 Delete `key`.
 
@@ -128,12 +128,12 @@ Delete `key`.
 name of the key
 
 
-### teenyconf.clear()
+### `teenyconf.clear()`
 
 Clear the conf and set it to empty object.
 
 
-### teenyconf.save([minify])
+### `teenyconf.save([minify])`
 
 Save the current config into its associated file.
 
@@ -147,7 +147,7 @@ default to `false`. Let you minify the content of the file
 `Promise`
 
 
-### teenyconf.reload()
+### `teenyconf.reload()`
 
 Reload the configuration from file. Can be useful if you have multiple instances of teeny-conf using the same file.
 
