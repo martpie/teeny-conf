@@ -1,19 +1,17 @@
 # teeny-conf
 A small npm package to handle one or multiple config files in Node apps. Works fine with Electron and NW.js.
 
-API asynchronous or synchronous, depending of your needs.
-
 ## Why another ?
 
 I didn't find what I wanted on npm, I was needing a conf I could put in a variable, so I could export it without any problem to another scope.
 
-## Example
-
-### Installation
+## Installation
 
 ``` bash
 npm install teeny-conf
 ```
+
+## Usage
 
 ### Basic
 
@@ -22,17 +20,21 @@ config.js:
 import teeny from 'teeny-conf';
 
 const config = new teeny('config.json'));
-config.loadOrCreateSync();
+await config.load();
+
+conf.set('language', 'en');
+
+await conf.save();
 ```
 
-### with an export
+### Using an export
 
 config.js:
 ``` javascript
 import teeny from 'teeny-conf';
 
 const config = new teeny('config.json'));
-config.loadOrCreateSync();
+await config.load();
 
 export default config;
 ```
@@ -43,46 +45,109 @@ import config from './config.js';
 // now you can use config.set(), config.get(), etc...
 ```
 
+
 ## API
 
 Most of the operations have two versions: a synchronous and an asynchronous one, depending of your needs.
 
+
 ### Constructor
 
-`new teeny(configPath)`
+`new teeny(configPath[, defaultConfig])`
 
 #### Params
 
-`configPath`: the filename where you want your config / your config already is.
+`configPath` String<br />
+the filename where you want your config / your config already is. If the directory/file does not exist, it will be created automatically.
 
-### teenyconf.loadOrCreate(defaultConfig, callback)
+`defaultConfig` Object<br />
+the default configuration if the config file does not currently exists.
 
-load a config file or create it if it does not exist. If `pathToFile` does not exist, a file will be created with the wanted name passed in the constructor, and `defaultConfig` in. If `defaultConfig` is not defined, this will be an empty object.
 
-### teenyconf.loadOrCreateSync(defaultConfig)
+### `teenyconf.load()`
 
-synchronous `loadOrCreate`.
+Load the existing config file into teeny if it exists. This is a mandatory step before everything else.
 
-### teenyconf.getAll()
+#### Return value
 
-get the whole conf
+`Promise`
 
-### teenyconf.get(key)
 
-get `key` in your config. Please note this does not support sublevel-keys yet.
+### teenyconf.get([key])
+
+Get the `key` value in your config. If no `key` is specified, returns the whole conf.<br />
+Please note `set` does not support sub-keys yet.
+
+#### Params
+
+`key` String (optional)<br/>
+name of the key
+
+#### Return value
+
+`any`
+
 
 ### teenyconf.set(key, value)
 
-set `key` to `value`
+Set `key` to `value`.
+
+#### Params
+
+`key` String<br />
+name of the key
+
+`value` any<br />
+the new value for this key
+
+
+### teenyconf.has(key)
+
+Check if a key exists in the conf.
+
+#### Params
+
+`key` String<br />
+name of the key
+
+#### Return value
+
+`Boolean`
+
 
 ### teenyconf.delete(key)
 
-delete `key`
+Delete `key`.
 
-### teenyconf.save(minify, callback)
+#### Params
 
-save config file with `callback`. `minify` is optional and let you minify the json output.
+`key` String<br />
+name of the key
 
-### teenyconf.saveSync(minify)
 
-save config file synchronously. `minify` is optional and let you minify the json output.
+### teenyconf.clear()
+
+Clear the conf and set it to empty object.
+
+
+### teenyconf.save([minify])
+
+Save the current config into its associated file.
+
+#### Params
+
+`minify` Boolean<br />
+default to `false`. Let you minify the content of the file
+
+#### Return value
+
+`Promise`
+
+
+### teenyconf.reload()
+
+Reload the configuration from file. Can be useful if you have multiple instances of teeny-conf using the same file.
+
+#### Return value
+
+`Promise`

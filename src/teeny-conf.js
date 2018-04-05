@@ -83,7 +83,7 @@ const teenyconf = function(configPath, defaultConfig = {}) {
   };
 
   /**
-   * [description]
+   * Set/add key/value pair
    * @param  {String} key key to be updated
    * @param  {any} value new key value
    */
