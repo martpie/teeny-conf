@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: node:carbon
-    working_directory: ~/ci-museeks
+    working_directory: ~/ci
     steps:
       - checkout
       - run:
