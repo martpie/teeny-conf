@@ -1,5 +1,8 @@
 # teeny-conf
-A small npm package to handle one or multiple config files in Node apps. Works fine with Electron and NW.js.
+
+A small npm package to handle one or multiple config files in Node apps. Works well with Electron and NW.js.
+
+All I/O operations are asynchronous and make use of Promises since v2.0, this means you can use `await/async` for async methods.
 
 ## Why another ?
 
