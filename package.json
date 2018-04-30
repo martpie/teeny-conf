@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/KeitIG/teeny-conf#readme",
   "devDependencies": {
-    "babel-eslint": "^8.2.2",
+    "babel-eslint": "^8.2.3",
     "eslint": "^4.19.1",
     "jest": "^22.4.3",
     "uniqid": "^4.1.1"
