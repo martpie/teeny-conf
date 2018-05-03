@@ -2,7 +2,7 @@
   "name": "teeny-conf",
   "version": "2.0.0",
   "description": "A small npm package to handle config files in Node apps. Works fine with Electron and NW.js",
-  "main": ".src/teeny-conf.js",
+  "main": "./src/teeny-conf.js",
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage"
