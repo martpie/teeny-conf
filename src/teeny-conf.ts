@@ -35,7 +35,6 @@ class TeenyConf {
    * @param  {String} key key to be got
    */
   async load() {
-    console.log('TEST', this._loaded);
     if (this._loaded) {
       throw (new Error('teeny-conf is already loaded'));
     }
