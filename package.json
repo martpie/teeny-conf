@@ -41,7 +41,7 @@
     "jest": "^23.6.0",
     "ts-jest": "^23.10.4",
     "typescript": "^3.1.6",
-    "uniqid": "^4.1.1"
+    "uniqid": "^5.0.3"
   },
   "dependencies": {
     "lodash.get": "^4.4.2",
