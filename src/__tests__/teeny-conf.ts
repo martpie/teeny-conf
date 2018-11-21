@@ -90,13 +90,21 @@ test('conf.get should return the whole conf by default', async () => {
 test('conf.get should return the specific key if specified', async () => {
   const configPath = generateDirectory();
 
-  const conf = new teenyconf(configPath, { fr: 'bonjour', number: 42 });
+  const conf = new teenyconf(configPath, {
+    fr: 'bonjour',
+    number: 42,
+    nested: {
+      a: 1,
+      b: 'stuff'
+    }
+  });
   await conf.load();
 
   // Check in-memory
   expect(conf.get('fr')).toBe('bonjour');
   expect(conf.get('number')).toBe(42);
   expect(conf.get('something')).toBe(undefined);
+  expect(conf.get('nested.b')).toBe('stuff');
 });
 
 
@@ -116,23 +124,50 @@ test('conf.set should add a key/value pair if not existing', async () => {
   const conf = new teenyconf(configPath, { fr: 'bonjour' });
   await conf.load();
   conf.set('de', 'guten Tag');
+  conf.set('nested.b', 'test');
 
   // Check in-memory
-  expect(conf.get()).toEqual({ fr: 'bonjour', de: 'guten Tag' });
+  expect(conf.get()).toEqual({ fr: 'bonjour', de: 'guten Tag', nested: { b: 'test' } });
   expect(conf.get('de')).toBe('guten Tag');
+  expect(conf.get('nested.b')).toBe('test');
 });
 
 
 test('conf.set should update the key/value pair if already existing', async () => {
   const configPath = generateDirectory();
 
-  const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'helo' });
+  const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'helo', nested: { b: 'test' } });
   await conf.load();
   conf.set('en', 'hello');
+  conf.set('nested.b', 'test2')
 
   // Check in-memory
-  expect(conf.get()).toEqual({ fr: 'bonjour', en: 'hello' });
+  expect(conf.get()).toEqual({ fr: 'bonjour', en: 'hello', nested: { b: 'test2' } });
   expect(conf.get('en')).toBe('hello');
+  expect(conf.get('nested.b')).toBe('test2');
+});
+
+test('conf.delete should remove the key/value pair', async () => {
+  const configPath = generateDirectory();
+
+  const conf = new teenyconf(configPath, {
+    fr: 'bonjour',
+    en: 'hello',
+    nested: { b: 'test' },
+    nested2: { b: 'test' }
+  });
+
+  await conf.load();
+
+  conf.delete('nested2');
+  expect(conf.get()).toEqual({ fr: 'bonjour', en: 'hello', nested: { b: 'test' } });
+
+  conf.delete('nested.b');
+  expect(conf.get()).toEqual({ fr: 'bonjour', en: 'hello', nested: {} });
+
+  conf.delete('en');
+  expect(conf.get()).toEqual({ fr: 'bonjour', nested: {} });
+  expect(conf.get('fr')).toBe('bonjour');
 });
 
 

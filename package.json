@@ -31,6 +31,10 @@
   "homepage": "https://github.com/martpie/teeny-conf#readme",
   "devDependencies": {
     "@types/jest": "^23.3.9",
+    "@types/lodash.get": "^4.4.4",
+    "@types/lodash.has": "^4.5.4",
+    "@types/lodash.set": "^4.3.4",
+    "@types/lodash.unset": "^4.5.4",
     "@types/node": "^10.12.9",
     "@types/rimraf": "^2.0.2",
     "@types/uniqid": "^4.1.2",
@@ -38,5 +42,11 @@
     "ts-jest": "^23.10.4",
     "typescript": "^3.1.6",
     "uniqid": "^4.1.1"
+  },
+  "dependencies": {
+    "lodash.get": "^4.4.2",
+    "lodash.has": "^4.5.2",
+    "lodash.set": "^4.3.2",
+    "lodash.unset": "^4.5.2"
   }
 }

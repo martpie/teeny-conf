@@ -2,6 +2,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as util from 'util';
 
+const has = require('lodash.has');
+const get = require('lodash.get');
+const set = require('lodash.set');
+const unset = require('lodash.unset');
+
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const mkdir = util.promisify(fs.mkdir);
@@ -69,7 +74,7 @@ class TeenyConf {
    * @param  {Boolean} [minify=false] minify the content of the file
    * @return {Promise}
    */
-  save = async (minify = false) => {
+  async save(minify = false) {
     const output = minify ? JSON.stringify(this._conf) : JSON.stringify(this._conf, null, ' ');
     await writeFile(this._configPath, output);
   };
@@ -82,7 +87,7 @@ class TeenyConf {
    */
   get(key?: string, def?: any): ConfigValue {
     if (key) {
-      if (this._conf.hasOwnProperty(key)) return this._conf[key];
+      if (has(this._conf, key)) return get(this._conf, key);
       return def;
     }
 
@@ -96,7 +101,7 @@ class TeenyConf {
    * @param  {any} value new key value
    */
   set(key: string, value: ConfigValue) {
-    this._conf[key] = value;
+    set(this._conf, key, value);
   };
 
   /**
@@ -104,7 +109,7 @@ class TeenyConf {
    * @param  {String} key key to be deleted
    */
   delete(key: string) {
-    delete this._conf[key];
+    unset(this._conf, key);
   };
 
   /**
@@ -118,8 +123,8 @@ class TeenyConf {
    * Check if a key exists
    * @param  {String} key
    */
-  has(key: string) {
-    return this._conf.hasOwnProperty(key);
+  has(key: string): boolean {
+    return has(this._conf, key);
   };
 }
 
