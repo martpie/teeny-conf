@@ -1,10 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const rimraf = require('rimraf');
-const util = require('util');
-const uniqid = require('uniqid');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as util from 'util';
+import * as rimraf from 'rimraf';
+import * as uniqid from 'uniqid';
 
-const teenyconf = require('./teeny-conf');
+import teenyconf from '../teeny-conf';
 
 const readFile = util.promisify(fs.readFile);
 const tmpPath = './tmp';
@@ -30,6 +30,7 @@ afterAll(() => {
  */
 test('Invalid instantiation should throw an error', () => {
   const newconf = () => {
+    // @ts-ignore
     new teenyconf();
   };
 
@@ -70,7 +71,7 @@ test('Default config option should be respected', async () => {
   expect(await conf.get()).toEqual({ fr: 'bonjour', en: 'hello' });
 
   // Check on disk
-  const json = JSON.parse(await readFile(configPath));
+  const json = JSON.parse((await readFile(configPath)).toString());
   expect(json).toEqual({ fr: 'bonjour', en: 'hello' });
 });
 
@@ -147,7 +148,7 @@ test('conf.save should correctly save file on disk', async () => {
   await conf.save();
 
   // Check on disk
-  const json = JSON.parse(await readFile(configPath));
+  const json = JSON.parse((await readFile(configPath)).toString());
   expect(json).toEqual({ fr: 'bonjour', de: 'guten Tag' });
 });
 
