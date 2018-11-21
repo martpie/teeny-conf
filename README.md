@@ -29,6 +29,23 @@ conf.set('language', 'en');
 
 await conf.save();
 ```
+### Nested keys
+
+config.js:
+``` javascript
+import teeny from 'teeny-conf';
+
+const config = new teeny('config.json', {
+  some: {
+    nested: {
+      property: 42
+    }
+  }
+}));
+await config.load();
+
+conf.get('some.nested.property'); // -> 42
+```
 
 ### Using an export
 
@@ -52,6 +69,8 @@ import config from './config.js';
 ## API
 
 Most of the operations have two versions: a synchronous and an asynchronous one, depending of your needs.
+
+All `key` in the doc refer to a usual key or a nested key.
 
 
 ### Constructor
