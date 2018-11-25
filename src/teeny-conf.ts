@@ -11,9 +11,8 @@ const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const mkdir = util.promisify(fs.mkdir);
 
-type ConfigValue = string | number | boolean | null | Object | any[];
+type ConfigValue = any; // Matching JSON.parse implementation
 type Config = Record<string, ConfigValue>
-
 
 class TeenyConf {
   _configPath: string;
@@ -83,11 +82,15 @@ class TeenyConf {
    * Get a key from conf
    * @param  {String} key
    * @param  {String} def default value to return if there is no key
-   * @return {[}
+   * @return {any}
    */
+  get(): Config;
+  get(key: string): ConfigValue;
+  get(key: string, def: any): ConfigValue;
   get(key?: string, def?: any): ConfigValue {
     if (key) {
       if (has(this._conf, key)) return get(this._conf, key);
+
       return def;
     }
 
