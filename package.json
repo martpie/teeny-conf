@@ -1,6 +1,6 @@
 {
   "name": "teeny-conf",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "A small npm package to handle config files in Node apps. Works fine with Electron and NW.js",
   "main": "./dist/teeny-conf.js",
   "files": [
