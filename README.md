@@ -2,7 +2,9 @@
 
 A small npm package to handle one or multiple config files in Node apps. Works well with Electron and NW.js.
 
-All I/O operations are asynchronous and make use of Promises since v2.0, this means you can use `await/async` for async methods.
+All I/O operations are synchronous and write operation are atomic to avoid files corruption.
+
+Saving and reloading are manual, in case you have to handle large files and avoid useless I/O operations.
 
 ## Why another ?
 
@@ -23,11 +25,9 @@ config.js:
 import teeny from 'teeny-conf';
 
 const config = new teeny('config.json'));
-await config.load();
 
 conf.set('language', 'en');
-
-await conf.save();
+conf.save(); // Save is a manual operation
 ```
 ### Nested keys
 
@@ -42,7 +42,6 @@ const config = new teeny('config.json', {
     }
   }
 }));
-await config.load();
 
 conf.get('some.nested.property'); // -> 42
 ```
@@ -54,7 +53,6 @@ config.js:
 import teeny from 'teeny-conf';
 
 const config = new teeny('config.json'));
-await config.load();
 
 export default config;
 ```
@@ -68,9 +66,7 @@ import config from './config.js';
 
 ## API
 
-Most of the operations have two versions: a synchronous and an asynchronous one, depending of your needs.
-
-All `key` in the doc refer to a usual key or a nested key.
+All `key` in the docs refer to a usual key or a nested key.
 
 
 ### Constructor
@@ -83,16 +79,11 @@ All `key` in the doc refer to a usual key or a nested key.
 the filename where you want your config / your config already is. If the directory/file does not exist, it will be created automatically.
 
 `defaultConfig` Object<br />
-the default configuration if the config file does not currently exists.
-
-
-### `teenyconf.load()`
-
-Load the existing config file into teeny if it exists. This is a mandatory step before everything else.
+the default configuration to use if the config file does not already exists.
 
 #### Return value
 
-`Promise`
+A `teeny` object.
 
 
 ### `teenyconf.get([key])`
@@ -163,7 +154,7 @@ default to `false`. Let you minify the content of the file
 
 #### Return value
 
-`Promise`
+none
 
 
 ### `teenyconf.reload()`
@@ -172,4 +163,4 @@ Reload the configuration from file. Can be useful if you have multiple instances
 
 #### Return value
 
-`Promise`
+none

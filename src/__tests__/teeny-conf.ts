@@ -34,7 +34,7 @@ test('Invalid instantiation should throw an error', () => {
     new teenyconf();
   };
 
-  expect(newconf).toThrow('teenyconf.load needs a valid configPath');
+  expect(newconf).toThrow('teenyconf needs a valid configPath');
 });
 
 
@@ -48,27 +48,13 @@ test('Valid instantiation should not throw anything', () => {
   expect(newconfWithPath).not.toThrow();
 });
 
-test('Calling conf.load() twice should throw an exception', async () => {
-  const configPath = generateDirectory();
-
-  async function newconf() {
-    const conf = new teenyconf(configPath);
-    await conf.load();
-    await conf.load();
-  }
-
-  await expect(newconf()).rejects.toThrow('teeny-conf is already loaded');
-});
-
-
 test('Default config option should be respected', async () => {
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
-  await conf.load();
 
   // Check in-memory
-  expect(await conf.get()).toEqual({ fr: 'bonjour', en: 'hello' });
+  expect(conf.get()).toEqual({ fr: 'bonjour', en: 'hello' });
 
   // Check on disk
   const json = JSON.parse((await readFile(configPath)).toString());
@@ -80,7 +66,6 @@ test('conf.get should return the whole conf by default', async () => {
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
-  await conf.load();
 
   // Check in-memory
   expect(conf.get()).toEqual({ fr: 'bonjour', en: 'hello' });
@@ -98,7 +83,6 @@ test('conf.get should return the specific key if specified', async () => {
       b: 'stuff'
     }
   });
-  await conf.load();
 
   // Check in-memory
   expect(conf.get('fr')).toBe('bonjour');
@@ -112,7 +96,6 @@ test('conf.get should return the default value if the key does not exist', async
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, {});
-  await conf.load();
 
   expect(conf.get('fr', 'bonjour')).toBe('bonjour');
 });
@@ -122,7 +105,7 @@ test('conf.set should add a key/value pair if not existing', async () => {
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour' });
-  await conf.load();
+
   conf.set('de', 'guten Tag');
   conf.set('nested.b', 'test');
 
@@ -137,7 +120,7 @@ test('conf.set should update the key/value pair if already existing', async () =
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'helo', nested: { b: 'test' } });
-  await conf.load();
+
   conf.set('en', 'hello');
   conf.set('nested.b', 'test2')
 
@@ -157,8 +140,6 @@ test('conf.delete should remove the key/value pair', async () => {
     nested2: { b: 'test' }
   });
 
-  await conf.load();
-
   conf.delete('nested2');
   expect(conf.get()).toEqual({ fr: 'bonjour', en: 'hello', nested: { b: 'test' } });
 
@@ -175,7 +156,6 @@ test('conf.save should correctly save file on disk', async () => {
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
-  await conf.load();
 
   conf.set('de', 'guten Tag');
   conf.delete('en');
@@ -191,7 +171,6 @@ test('conf.save minify option should be respected', async () => {
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
-  await conf.load();
 
   conf.set('de', 'guten Tag');
   conf.delete('en');
@@ -208,10 +187,8 @@ test('conf.reload should work correctly', async () => {
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
-  await conf.load();
 
   const conf2 = new teenyconf(configPath);
-  await conf2.load();
 
   conf.set('de', 'guten Tag');
   conf.delete('en');
@@ -227,7 +204,6 @@ test('conf.clear should work correctly', async () => {
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
-  await conf.load();
 
   conf.clear();
 
@@ -240,7 +216,6 @@ test('conf.has should work correctly', async () => {
   const configPath = generateDirectory();
 
   const conf = new teenyconf(configPath, { fr: 'bonjour', en: 'hello' });
-  await conf.load();
 
   // Check on disk
   expect(conf.has('fr')).toBe(true);

@@ -41,6 +41,7 @@
     "@types/node": "^10.12.9",
     "@types/rimraf": "^2.0.2",
     "@types/uniqid": "^4.1.2",
+    "@types/write-file-atomic": "^2.1.1",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.4",
     "typescript": "^3.1.6",
@@ -50,6 +51,7 @@
     "lodash.get": "^4.4.2",
     "lodash.has": "^4.5.2",
     "lodash.set": "^4.3.2",
-    "lodash.unset": "^4.5.2"
+    "lodash.unset": "^4.5.2",
+    "write-file-atomic": "^2.3.0"
   }
 }

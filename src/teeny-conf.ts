@@ -1,15 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as util from 'util';
+import * as atomicWrite from 'write-file-atomic';
 
 const has = require('lodash.has');
 const get = require('lodash.get');
 const set = require('lodash.set');
 const unset = require('lodash.unset');
-
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
-const mkdir = util.promisify(fs.mkdir);
 
 type ConfigValue = any; // Matching JSON.parse implementation
 type Config = Record<string, ConfigValue>
@@ -18,64 +14,44 @@ class TeenyConf {
   _configPath: string;
   _defaultConfig: Config;
   _conf: Config;
-  _loaded: boolean;
 
   constructor (configPath: string, defaultConfig: Config = {}) {
 
-    if (!configPath) throw (new TypeError('teenyconf.load needs a valid configPath'));
+    if (!configPath) throw (new TypeError('teenyconf needs a valid configPath'));
 
     this._configPath = path.resolve(configPath);
     this._defaultConfig = defaultConfig;
 
-    if (!configPath) throw(new TypeError('teenyconf.load needs a valid configPath'));
-
-    this._conf = {};
-    this._loaded = false;
-  }
-
-  /**
-   * Get the value of a config key
-   * If no key is specified, return the whole config
-   * @param  {String} key key to be got
-   */
-  async load() {
-    if (this._loaded) {
-      throw (new Error('teeny-conf is already loaded'));
-    }
-
     // Check if directory exists, creates it if needed
     if (!fs.existsSync(path.dirname(this._configPath))) {
-      await mkdir(path.dirname(this._configPath));
+      fs.mkdirSync(path.dirname(this._configPath))
     }
 
     try { // Load the file
-      this._conf = JSON.parse((await readFile(this._configPath)).toString());
-    } catch(err) {
+      this._conf = JSON.parse(fs.readFileSync(this._configPath).toString());
+    } catch (err) {
       // console.info(`An error occured when parsing ${_configPath}, fallback on default config`);
       this._conf = this._defaultConfig;
 
-      await this.save();
+      this.save();
     }
-
-    this._loaded = true;
-  };
+  }
 
   /**
    * Reload the configuration from file
-   * @return {Promise}
    */
-  async reload() {
-    this._conf = JSON.parse((await readFile(this._configPath)).toString());
+  reload() {
+    this._conf = JSON.parse(fs.readFileSync(this._configPath).toString());
   };
 
   /**
    * Save current config to its associated file
    * @param  {Boolean} [minify=false] minify the content of the file
-   * @return {Promise}
    */
-  async save(minify = false) {
+  save(minify = false) {
     const output = minify ? JSON.stringify(this._conf) : JSON.stringify(this._conf, null, ' ');
-    await writeFile(this._configPath, output);
+
+    atomicWrite.sync(this._configPath, output);
   };
 
   /**
