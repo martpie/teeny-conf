@@ -1,6 +1,7 @@
 # teeny-conf
 
-![build status](https://img.shields.io/circleci/project/github/martpie/teeny-conf/master.svg?style=flat-square)
+[![Build Status](https://img.shields.io/circleci/project/github/martpie/teeny-conf.svg)](https://circleci.com/gh/martpie/teeny-conf)
+[![Dependencies](https://david-dm.org/martpie/teeny-conf.svg)](https://github.com/martpie/teeny-conf)
 
 A small npm package to handle one or multiple config files in Node apps. Works well with Electron and NW.js.
 
