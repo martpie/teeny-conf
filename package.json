@@ -33,25 +33,24 @@
   },
   "homepage": "https://github.com/martpie/teeny-conf#readme",
   "devDependencies": {
-    "@types/jest": "^23.3.9",
-    "@types/lodash.get": "^4.4.4",
-    "@types/lodash.has": "^4.5.4",
-    "@types/lodash.set": "^4.3.4",
-    "@types/lodash.unset": "^4.5.4",
-    "@types/node": "^10.12.9",
-    "@types/rimraf": "^2.0.2",
-    "@types/uniqid": "^4.1.2",
-    "@types/write-file-atomic": "^2.1.1",
-    "jest": "^23.6.0",
-    "ts-jest": "^23.10.4",
-    "typescript": "^3.1.6",
-    "uniqid": "^5.0.3"
+    "@types/jest": "^25.2.3",
+    "@types/lodash.get": "^4.4.6",
+    "@types/lodash.has": "^4.5.6",
+    "@types/lodash.set": "^4.3.6",
+    "@types/lodash.unset": "^4.5.6",
+    "@types/node": "^14.0.9",
+    "@types/uniqid": "^5.2.0",
+    "@types/write-file-atomic": "^3.0.0",
+    "jest": "^26.0.1",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.9.3",
+    "uniqid": "^5.2.0"
   },
   "dependencies": {
     "lodash.get": "^4.4.2",
     "lodash.has": "^4.5.2",
     "lodash.set": "^4.3.2",
     "lodash.unset": "^4.5.2",
-    "write-file-atomic": "^2.3.0"
+    "write-file-atomic": "^3.0.3"
   }
 }
