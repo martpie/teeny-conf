@@ -1,9 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es3",
-    "module": "commonjs",
-    "jsx": "preserve",
+    "esModuleInterop": true,
+    "target": "ES2022",
+    "module": "ES2022",
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -13,13 +13,7 @@
     "strict": true,
     "outDir": "dist",
     "declaration": true,
-    "lib": [
-      "es2017"
-    ]
+    "lib": ["es2017"]
   },
-  "exclude": [
-    "**/node_modules",
-    "**/__tests__/**",
-    "dist/**"
-  ]
+  "exclude": ["**/node_modules", "**/__tests__/**", "dist/**"]
 }
