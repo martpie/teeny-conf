@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/martpie/teeny-conf#readme",
   "devDependencies": {
+    "@types/lodash.clonedeep": "^4.5.7",
     "@types/lodash.get": "^4.4.7",
     "@types/lodash.has": "^4.5.7",
     "@types/lodash.set": "^4.3.7",
@@ -48,6 +49,7 @@
   },
   "dependencies": {
     "@types/rimraf": "^3.0.2",
+    "lodash.clonedeep": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.has": "^4.5.2",
     "lodash.set": "^4.3.2",

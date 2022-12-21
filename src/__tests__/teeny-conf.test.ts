@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, test, expect } from "vitest";
+import { beforeEach, afterAll, test, expect } from "vitest";
 import fs from "fs";
 import path from "path";
 import util from "util";
@@ -17,7 +17,7 @@ function generateDirectory() {
 /**
  * Hooks
  */
-beforeAll(() => {
+beforeEach(() => {
   rimraf.sync(tmpPath);
   fs.mkdirSync(tmpPath);
 });
@@ -42,7 +42,7 @@ test("Valid instantiation should not throw anything", () => {
   const configPath = generateDirectory();
 
   const newconfWithPath = () => {
-    new teenyconf(configPath);
+    new teenyconf(configPath, {});
   };
 
   expect(newconfWithPath).not.toThrow();
@@ -85,34 +85,17 @@ test("conf.get should return the specific key if specified", async () => {
   // Check in-memory
   expect(conf.get("fr")).toBe("bonjour");
   expect(conf.get("number")).toBe(42);
-  expect(conf.get("something")).toBe(undefined);
   expect(conf.get("nested.b")).toBe("stuff");
 });
 
 test("conf.get should return the default value if the key does not exist", async () => {
   const configPath = generateDirectory();
 
-  const conf = new teenyconf(configPath, {});
+  const conf = new teenyconf(configPath, {
+    fr: undefined as string | undefined,
+  });
 
   expect(conf.get("fr", "bonjour")).toBe("bonjour");
-});
-
-test("conf.set should add a key/value pair if not existing", async () => {
-  const configPath = generateDirectory();
-
-  const conf = new teenyconf(configPath, { fr: "bonjour" });
-
-  conf.set("de", "guten Tag");
-  conf.set("nested.b", "test");
-
-  // Check in-memory
-  expect(conf.get()).toEqual({
-    fr: "bonjour",
-    de: "guten Tag",
-    nested: { b: "test" },
-  });
-  expect(conf.get("de")).toBe("guten Tag");
-  expect(conf.get("nested.b")).toBe("test");
 });
 
 test("conf.set should update the key/value pair if already existing", async () => {
@@ -165,12 +148,16 @@ test("conf.delete should remove the key/value pair", async () => {
 test("conf.save should correctly save file on disk", async () => {
   const configPath = generateDirectory();
 
-  const conf = new teenyconf(configPath, { fr: "bonjour", en: "hello" });
+  const conf = new teenyconf(configPath, {
+    fr: "bonjour",
+    en: "hello",
+    de: "wrong",
+  });
 
   conf.set("de", "guten Tag");
   conf.delete("en");
 
-  await conf.save();
+  conf.save();
 
   // Check on disk
   const json = JSON.parse((await readFile(configPath)).toString());
@@ -180,12 +167,16 @@ test("conf.save should correctly save file on disk", async () => {
 test("conf.save minify option should be respected", async () => {
   const configPath = generateDirectory();
 
-  const conf = new teenyconf(configPath, { fr: "bonjour", en: "hello" });
+  const conf = new teenyconf(configPath, {
+    fr: "bonjour",
+    en: "hello",
+    de: "wrong",
+  });
 
   conf.set("de", "guten Tag");
   conf.delete("en");
 
-  await conf.save(true);
+  conf.save(true);
 
   // Check on disk
   const file = await readFile(configPath, "utf8");
@@ -195,15 +186,18 @@ test("conf.save minify option should be respected", async () => {
 test("conf.reload should work correctly", async () => {
   const configPath = generateDirectory();
 
-  const conf = new teenyconf(configPath, { fr: "bonjour", en: "hello" });
-
-  const conf2 = new teenyconf(configPath);
+  const conf = new teenyconf(configPath, {
+    fr: "bonjour",
+    en: "hello",
+    de: "hello",
+  });
+  const conf2 = new teenyconf(configPath, { de: "test" });
 
   conf.set("de", "guten Tag");
   conf.delete("en");
 
-  await conf.save();
-  await conf2.reload();
+  conf.save();
+  conf2.reload();
 
   expect(conf2.get()).toEqual({ fr: "bonjour", de: "guten Tag" });
 });
@@ -213,10 +207,11 @@ test("conf.clear should work correctly", async () => {
 
   const conf = new teenyconf(configPath, { fr: "bonjour", en: "hello" });
 
+  conf.set("en", "nopenope");
   conf.clear();
 
   // Check on disk
-  expect(conf.get()).toEqual({});
+  expect(conf.get()).toEqual({ fr: "bonjour", en: "hello" });
 });
 
 test("conf.has should work correctly", async () => {

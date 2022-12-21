@@ -6,16 +6,39 @@ import has from "lodash.has";
 import get from "lodash.get";
 import set from "lodash.set";
 import unset from "lodash.unset";
+import clonedeep from "lodash.clonedeep";
 
-type ConfigValue = any; // Matching JSON.parse implementation
-type Config = Record<string, ConfigValue>;
+// -----------------------------------------------------------------------------
+// TypeScript Helpers
+// -----------------------------------------------------------------------------
 
-class TeenyConf {
+type StringableKey<T> = T extends readonly unknown[]
+  ? number extends T["length"]
+    ? number
+    : `${number}`
+  : string | number;
+
+type Path<T> = T extends object
+  ? {
+      [P in keyof T & StringableKey<T>]: `${P}` | `${P}.${Path<T[P]>}`;
+    }[keyof T & StringableKey<T>]
+  : never;
+
+type UntypedConfig = Record<string, any>;
+
+// -----------------------------------------------------------------------------
+// TeenyConf itself
+// -----------------------------------------------------------------------------
+
+class TeenyConf<
+  Config extends UntypedConfig,
+  ConfigKey extends string = Path<Config>
+> {
   _configPath: string;
   _defaultConfig: Config;
   _conf: Config;
 
-  constructor(configPath: string, defaultConfig: Config = {}) {
+  constructor(configPath: string, defaultConfig: Config) {
     if (!configPath) throw new TypeError("teenyconf needs a valid configPath");
 
     this._configPath = path.resolve(configPath);
@@ -31,7 +54,7 @@ class TeenyConf {
       this._conf = JSON.parse(fs.readFileSync(this._configPath).toString());
     } catch (err) {
       // console.info(`An error occured when parsing ${_configPath}, fallback on default config`);
-      this._conf = this._defaultConfig;
+      this._conf = clonedeep(this._defaultConfig);
 
       this.save();
     }
@@ -46,7 +69,6 @@ class TeenyConf {
 
   /**
    * Save current config to its associated file
-   * @param  {Boolean} [minify=false] minify the content of the file
    */
   save(minify = false) {
     const output = minify
@@ -58,18 +80,16 @@ class TeenyConf {
 
   /**
    * Get a key from conf
-   * @param  {String} key
-   * @param  {String} def default value to return if there is no key
-   * @return {any}
    */
-  get(): Config;
-  get(key: string): ConfigValue;
-  get(key: string, def: any): ConfigValue;
-  get(key?: string, def?: any): ConfigValue {
+  get(): Config | undefined;
+  get<T extends ConfigKey>(key: T): Config[T] | undefined;
+  get<T extends ConfigKey>(key: T, def: Config[T]): Config[T] | undefined;
+  get<T extends ConfigKey>(
+    key?: T,
+    def?: Config[T]
+  ): Config | Config[T] | undefined {
     if (key) {
-      if (has(this._conf, key)) return get(this._conf, key);
-
-      return def;
+      return get(this._conf, key, def);
     }
 
     // Else return everything
@@ -78,33 +98,29 @@ class TeenyConf {
 
   /**
    * Set/add key/value pair
-   * @param  {String} key key to be updated
-   * @param  {any} value new key value
    */
-  set(key: string, value: ConfigValue) {
+  set<T extends ConfigKey>(key: T, value: Config[T]) {
     set(this._conf, key, value);
   }
 
   /**
    * Delete a key from the configuration
-   * @param  {String} key key to be deleted
    */
   delete(key: string) {
     unset(this._conf, key);
   }
 
   /**
-   * Delete a key from the configuration
+   * Clear the configuration and rolls it back the default config
    */
   clear() {
-    this._conf = {};
+    this._conf = clonedeep(this._defaultConfig);
   }
 
   /**
    * Check if a key exists
-   * @param  {String} key
    */
-  has(key: string): boolean {
+  has(key: ConfigKey | string): boolean {
     return has(this._conf, key);
   }
 }
