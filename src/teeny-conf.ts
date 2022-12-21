@@ -46,7 +46,6 @@ class TeenyConf {
 
   /**
    * Save current config to its associated file
-   * @param  {Boolean} [minify=false] minify the content of the file
    */
   save(minify = false) {
     const output = minify
@@ -58,9 +57,6 @@ class TeenyConf {
 
   /**
    * Get a key from conf
-   * @param  {String} key
-   * @param  {String} def default value to return if there is no key
-   * @return {any}
    */
   get(): Config;
   get(key: string): ConfigValue;
@@ -78,8 +74,6 @@ class TeenyConf {
 
   /**
    * Set/add key/value pair
-   * @param  {String} key key to be updated
-   * @param  {any} value new key value
    */
   set(key: string, value: ConfigValue) {
     set(this._conf, key, value);
@@ -87,7 +81,6 @@ class TeenyConf {
 
   /**
    * Delete a key from the configuration
-   * @param  {String} key key to be deleted
    */
   delete(key: string) {
     unset(this._conf, key);
@@ -102,7 +95,6 @@ class TeenyConf {
 
   /**
    * Check if a key exists
-   * @param  {String} key
    */
   has(key: string): boolean {
     return has(this._conf, key);
