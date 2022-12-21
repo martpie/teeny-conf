@@ -7,12 +7,31 @@ import get from "lodash.get";
 import set from "lodash.set";
 import unset from "lodash.unset";
 
+// -----------------------------------------------------------------------------
+// TypeScript Helpers
+// -----------------------------------------------------------------------------
+
+type StringableKey<T> = T extends readonly unknown[]
+  ? number extends T["length"]
+    ? number
+    : `${number}`
+  : string | number;
+
+type Path<T> = T extends object
+  ? {
+      [P in keyof T & StringableKey<T>]: `${P}` | `${P}.${Path<T[P]>}`;
+    }[keyof T & StringableKey<T>]
+  : never;
+
 type UntypedConfig = Record<string, any>;
-type UnknownConfig = Record<string, unknown>;
+
+// -----------------------------------------------------------------------------
+// TeenyConf itself
+// -----------------------------------------------------------------------------
 
 class TeenyConf<
-  Config extends UntypedConfig = UnknownConfig,
-  ConfigKey extends string = Extract<keyof Config, string>
+  Config extends UntypedConfig,
+  ConfigKey extends string = Path<Config>
 > {
   _configPath: string;
   _defaultConfig: Config;
@@ -22,7 +41,7 @@ class TeenyConf<
     if (!configPath) throw new TypeError("teenyconf needs a valid configPath");
 
     this._configPath = path.resolve(configPath);
-    this._defaultConfig = defaultConfig;
+    this._defaultConfig = structuredClone(defaultConfig);
 
     // Check if directory exists, creates it if needed
     if (!fs.existsSync(path.dirname(this._configPath))) {
@@ -34,7 +53,7 @@ class TeenyConf<
       this._conf = JSON.parse(fs.readFileSync(this._configPath).toString());
     } catch (err) {
       // console.info(`An error occured when parsing ${_configPath}, fallback on default config`);
-      this._conf = this._defaultConfig;
+      this._conf = structuredClone(this._defaultConfig);
 
       this.save();
     }
@@ -69,9 +88,7 @@ class TeenyConf<
     def?: Config[T]
   ): Config | Config[T] | undefined {
     if (key) {
-      if (has(this._conf, key)) return get(this._conf, key);
-
-      return def;
+      return get(this._conf, key, def);
     }
 
     // Else return everything
@@ -96,13 +113,13 @@ class TeenyConf<
    * Clear the configuration and rolls it back the default config
    */
   clear() {
-    this._conf = this._defaultConfig;
+    this._conf = structuredClone(this._defaultConfig);
   }
 
   /**
    * Check if a key exists
    */
-  has(key: ConfigKey): boolean {
+  has(key: ConfigKey | string): boolean {
     return has(this._conf, key);
   }
 }
