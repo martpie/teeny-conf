@@ -68,14 +68,6 @@ class TeenyConf<
     key?: T,
     def?: Config[T]
   ): Config | Config[T] | undefined {
-    if (typeof key === "number") {
-      return undefined;
-    }
-
-    if (typeof key === "symbol") {
-      return undefined;
-    }
-
     if (key) {
       if (has(this._conf, key)) return get(this._conf, key);
 
