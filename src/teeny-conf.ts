@@ -97,6 +97,24 @@ class TeenyConf<
   }
 
   /**
+   * Get a key from conf, throw if it does not exist
+   */
+  getx<T extends ConfigKey>(key: T): Config[T];
+  getx<T extends ConfigKey>(key: T, def: Config[T]): Config[T];
+  getx<T extends ConfigKey>(key?: T, def?: Config[T]): Config[T] {
+    if (key) {
+      const valueExists = has(this._conf, key);
+
+      if (valueExists) {
+        // we checked with has() first, so it's safe
+        return get(this._conf, key, def) as Config[T];
+      }
+    }
+
+    throw new Error(`TeenyConf - key "${key}" does not exist in the config.`);
+  }
+
+  /**
    * Set/add key/value pair
    */
   set<T extends ConfigKey>(key: T, value: Config[T]) {

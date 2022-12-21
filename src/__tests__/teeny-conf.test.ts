@@ -98,6 +98,37 @@ test("conf.get should return the default value if the key does not exist", async
   expect(conf.get("fr", "bonjour")).toBe("bonjour");
 });
 
+test("conf.getx should return the specific key if specified", async () => {
+  const configPath = generateDirectory();
+
+  const conf = new teenyconf(configPath, {
+    fr: "bonjour",
+    number: 42,
+    nested: {
+      a: 1,
+      b: "stuff",
+    },
+  });
+
+  // Check in-memory
+  expect(conf.getx("fr")).toBe("bonjour");
+  expect(conf.getx("number")).toBe(42);
+  expect(conf.getx("nested.b")).toBe("stuff");
+});
+
+test("conf.getx should throw if a requested key does not exist", async () => {
+  const configPath = generateDirectory();
+
+  const conf = new teenyconf<{ fr: string; de: string }>(configPath, {
+    fr: "bonjour",
+  });
+
+  // Check in-memory
+  expect(() => {
+    conf.getx("de");
+  }).toThrow();
+});
+
 test("conf.set should update the key/value pair if already existing", async () => {
   const configPath = generateDirectory();
 
