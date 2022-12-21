@@ -35,10 +35,10 @@ class TeenyConf<
   ConfigKey extends string = Path<Config>
 > {
   _configPath: string;
-  _defaultConfig: Config;
-  _conf: Config;
+  _defaultConfig: Partial<Config>;
+  _conf: Partial<Config>;
 
-  constructor(configPath: string, defaultConfig: Config) {
+  constructor(configPath: string, defaultConfig: Partial<Config>) {
     if (!configPath) throw new TypeError("teenyconf needs a valid configPath");
 
     this._configPath = path.resolve(configPath);
@@ -81,13 +81,13 @@ class TeenyConf<
   /**
    * Get a key from conf
    */
-  get(): Config | undefined;
+  get(): Partial<Config> | undefined;
   get<T extends ConfigKey>(key: T): Config[T] | undefined;
   get<T extends ConfigKey>(key: T, def: Config[T]): Config[T] | undefined;
   get<T extends ConfigKey>(
     key?: T,
     def?: Config[T]
-  ): Config | Config[T] | undefined {
+  ): Partial<Config> | Config[T] | undefined {
     if (key) {
       return get(this._conf, key, def);
     }

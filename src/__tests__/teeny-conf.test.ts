@@ -31,7 +31,7 @@ afterAll(() => {
  */
 test("Invalid instantiation should throw an error", () => {
   const newconf = () => {
-    // @ts-ignore
+    // @ts-expect-error
     new teenyconf();
   };
 
