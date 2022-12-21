@@ -6,6 +6,7 @@ import has from "lodash.has";
 import get from "lodash.get";
 import set from "lodash.set";
 import unset from "lodash.unset";
+import clonedeep from "lodash.clonedeep";
 
 // -----------------------------------------------------------------------------
 // TypeScript Helpers
@@ -41,7 +42,7 @@ class TeenyConf<
     if (!configPath) throw new TypeError("teenyconf needs a valid configPath");
 
     this._configPath = path.resolve(configPath);
-    this._defaultConfig = structuredClone(defaultConfig);
+    this._defaultConfig = defaultConfig;
 
     // Check if directory exists, creates it if needed
     if (!fs.existsSync(path.dirname(this._configPath))) {
@@ -53,7 +54,7 @@ class TeenyConf<
       this._conf = JSON.parse(fs.readFileSync(this._configPath).toString());
     } catch (err) {
       // console.info(`An error occured when parsing ${_configPath}, fallback on default config`);
-      this._conf = structuredClone(this._defaultConfig);
+      this._conf = clonedeep(this._defaultConfig);
 
       this.save();
     }
@@ -113,7 +114,7 @@ class TeenyConf<
    * Clear the configuration and rolls it back the default config
    */
   clear() {
-    this._conf = structuredClone(this._defaultConfig);
+    this._conf = clonedeep(this._defaultConfig);
   }
 
   /**
