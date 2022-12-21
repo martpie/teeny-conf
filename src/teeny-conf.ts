@@ -7,15 +7,18 @@ import get from "lodash.get";
 import set from "lodash.set";
 import unset from "lodash.unset";
 
-type ConfigValue = any; // Matching JSON.parse implementation
-type Config = Record<string, ConfigValue>;
+type UntypedConfig = Record<string, any>;
+type UnknownConfig = Record<string, unknown>;
 
-class TeenyConf {
+class TeenyConf<
+  Config extends UntypedConfig = UnknownConfig,
+  ConfigKey extends string = Extract<keyof Config, string>
+> {
   _configPath: string;
   _defaultConfig: Config;
   _conf: Config;
 
-  constructor(configPath: string, defaultConfig: Config = {}) {
+  constructor(configPath: string, defaultConfig: Config) {
     if (!configPath) throw new TypeError("teenyconf needs a valid configPath");
 
     this._configPath = path.resolve(configPath);
@@ -58,10 +61,21 @@ class TeenyConf {
   /**
    * Get a key from conf
    */
-  get(): Config;
-  get(key: string): ConfigValue;
-  get(key: string, def: any): ConfigValue;
-  get(key?: string, def?: any): ConfigValue {
+  get(): Config | undefined;
+  get<T extends ConfigKey>(key: T): Config[T] | undefined;
+  get<T extends ConfigKey>(key: T, def: Config[T]): Config[T] | undefined;
+  get<T extends ConfigKey>(
+    key?: T,
+    def?: Config[T]
+  ): Config | Config[T] | undefined {
+    if (typeof key === "number") {
+      return undefined;
+    }
+
+    if (typeof key === "symbol") {
+      return undefined;
+    }
+
     if (key) {
       if (has(this._conf, key)) return get(this._conf, key);
 
@@ -75,7 +89,7 @@ class TeenyConf {
   /**
    * Set/add key/value pair
    */
-  set(key: string, value: ConfigValue) {
+  set<T extends ConfigKey>(key: T, value: Config[T]) {
     set(this._conf, key, value);
   }
 
@@ -87,16 +101,16 @@ class TeenyConf {
   }
 
   /**
-   * Delete a key from the configuration
+   * Clear the configuration and rolls it back the default config
    */
   clear() {
-    this._conf = {};
+    this._conf = this._defaultConfig;
   }
 
   /**
    * Check if a key exists
    */
-  has(key: string): boolean {
+  has(key: ConfigKey): boolean {
     return has(this._conf, key);
   }
 }
