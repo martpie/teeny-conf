@@ -5,9 +5,9 @@
   "type": "module",
   "exports": {
     ".": {
-      "require": "./dist/cjs/lib.js",
-      "import": "./dist/esm/lib.js",
-      "default": "./dist/esm/lib.js"
+      "require": "./dist/cjs/teeny-conf.js",
+      "import": "./dist/esm/teeny-conf.js",
+      "default": "./dist/esm/teeny-conf.js"
     }
   },
   "files": [
