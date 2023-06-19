@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/teeny-conf.d.ts",
       "import": "./dist/teeny-conf.mjs",
       "require": "./dist/teeny-conf.cjs"
     }
