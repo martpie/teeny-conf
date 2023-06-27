@@ -38,7 +38,7 @@ class TeenyConf<
   _defaultConfig: Partial<Config>;
   _conf: Partial<Config>;
 
-  constructor(configPath: string, defaultConfig: Partial<Config>) {
+  constructor(configPath: string, defaultConfig: Config) {
     if (!configPath) throw new TypeError("teenyconf needs a valid configPath");
 
     this._configPath = path.resolve(configPath);
@@ -56,7 +56,7 @@ class TeenyConf<
       // console.info(`An error occured when parsing ${_configPath}, fallback on default config`);
       this._conf = clonedeep(this._defaultConfig);
 
-      this.save();
+      this.#save();
     }
   }
 
@@ -65,17 +65,6 @@ class TeenyConf<
    */
   reload() {
     this._conf = JSON.parse(fs.readFileSync(this._configPath).toString());
-  }
-
-  /**
-   * Save current config to its associated file
-   */
-  save(minify = false) {
-    const output = minify
-      ? JSON.stringify(this._conf)
-      : JSON.stringify(this._conf, null, " ");
-
-    atomicWrite.sync(this._configPath, output);
   }
 
   /**
@@ -97,41 +86,17 @@ class TeenyConf<
   }
 
   /**
-   * Get a key from conf, throw if it does not exist
-   */
-  getx<T extends ConfigKey>(key: T): Config[T];
-  getx<T extends ConfigKey>(key: T, def: Config[T]): Config[T];
-  getx<T extends ConfigKey>(key?: T, def?: Config[T]): Config[T] {
-    if (key) {
-      const valueExists = has(this._conf, key);
-
-      if (valueExists) {
-        // we checked with has() first, so it's safe
-        return get(this._conf, key, def) as Config[T];
-      }
-    }
-
-    throw new Error(`TeenyConf - key "${key}" does not exist in the config.`);
-  }
-
-  /**
    * Set/add key/value pair
    */
   set<T extends ConfigKey>(key: T, value: Config[T]) {
     set(this._conf, key, value);
-  }
-
-  /**
-   * Delete a key from the configuration
-   */
-  delete(key: string) {
-    unset(this._conf, key);
+    this.#save();
   }
 
   /**
    * Clear the configuration and rolls it back the default config
    */
-  clear() {
+  reset() {
     this._conf = clonedeep(this._defaultConfig);
   }
 
@@ -140,6 +105,17 @@ class TeenyConf<
    */
   has(key: ConfigKey | string): boolean {
     return has(this._conf, key);
+  }
+
+  /**
+   * Save current config to its associated file
+   */
+  #save(minify = false) {
+    const output = minify
+      ? JSON.stringify(this._conf)
+      : JSON.stringify(this._conf, null, " ");
+
+    atomicWrite.sync(this._configPath, output);
   }
 }
 
