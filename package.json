@@ -5,20 +5,25 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/teeny-conf.d.ts",
-      "import": "./dist/teeny-conf.mjs",
-      "require": "./dist/teeny-conf.cjs"
+      "import": {
+        "types": "./dist/teeny-conf.d.ts",
+        "default": "./dist/teeny-conf.js"
+      },
+      "require": {
+        "types": "./dist/teeny-conf.d.cts",
+        "default": "./dist/teeny-conf.cjs"
+      }
     }
   },
-  "main": "./dist/teeny-conf.cjs",
+  "main": "./dist/teeny-conf.js",
   "types": "./dist/teeny-conf.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "preversion": "npm run test",
-    "prepublishOnly": "npm run build",
-    "build": "unbuild",
+    "preversion": "yarn test",
+    "prepublishOnly": "yarn publint && yarn attw -P && yarn build",
+    "build": "tsup src/teeny-conf.ts --format esm,cjs --dts --sourcemap",
     "test": "vitest run",
     "test:watch": "vitest watch"
   },
@@ -42,6 +47,7 @@
   },
   "homepage": "https://github.com/martpie/teeny-conf#readme",
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.4.1",
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/lodash.get": "^4.4.7",
     "@types/lodash.has": "^4.5.7",
@@ -50,7 +56,9 @@
     "@types/node": "^18.11.17",
     "@types/uniqid": "^5.3.2",
     "@types/write-file-atomic": "^4.0.0",
+    "publint": "^0.1.12",
     "rimraf": "^3.0.2",
+    "tsup": "^7.1.0",
     "typescript": "^4.9.4",
     "uniqid": "^5.4.0",
     "vite": "^4.3.9",
@@ -63,7 +71,6 @@
     "lodash.has": "^4.5.2",
     "lodash.set": "^4.3.2",
     "lodash.unset": "^4.5.2",
-    "unbuild": "^1.2.1",
     "write-file-atomic": "^5.0.0"
   }
 }
