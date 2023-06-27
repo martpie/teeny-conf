@@ -22,3 +22,12 @@ jobs:
 
       - name: "Test: unit & end-to-end tests"
         run: yarn test
+
+      - name: "Publint"
+        run: yarn publint
+
+      - name: "Are the types wrong?"
+        run: yarn attw -P
+
+      - name: "Build"
+        run: yarn build
